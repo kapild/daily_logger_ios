@@ -14,6 +14,18 @@ Android app, so history carries straight on.
 
 This is step 1 (the logger). Widgets and the Insights tab come next.
 
+## Quick start
+
+1. On a Mac with Xcode 16: `brew install xcodegen`, then `xcodegen` in this folder.
+2. Create `Config/Local.xcconfig` with `DEVELOPMENT_TEAM = <your team id>`.
+3. Open `DailyLogger.xcodeproj`, pick your iPhone, press **Run**.
+4. In the app's **Setup** tab: allow Health, Calendar, Location (**Always**) and Motion; pick the
+   **Logger** calendar; set home, office and gym with **Use my current location**.
+5. Create the 5 Shortcuts automations listed in **Setup**, each set to **Run Immediately**.
+
+A free Apple account works, but the app stops after 7 days and Health may not wake it in the
+background; the $99 developer account avoids both. Details below.
+
 ## How it works on iPhone
 
 iOS doesn't let an app run all the time, so Daily Logger is woken up and catches up each time:
@@ -65,6 +77,15 @@ available.
    | Wi-Fi home / office joins (one each) | Log: Joined Wi-Fi, with the name |
 
 The **Found** tab lists every signal (swipe to delete a wrong one); **Activity** shows what each sync did.
+
+## First day: what to check
+
+- Leave home with the app closed: a `Left home` event should appear within a few minutes.
+- Get on the shuttle and connect the car: the Shortcuts actions should run without opening the app
+  (they show in the **Found** tab).
+- Next morning, last night's sleep should be in the calendar once Health has it.
+
+If something is missing, the **Activity** tab shows what each sync did.
 
 ## Code
 
