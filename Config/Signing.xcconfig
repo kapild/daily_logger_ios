@@ -1,0 +1,6 @@
+// Defaults. Your own team id (and, with a free account, a unique bundle id)
+// go in Local.xcconfig next to this file, which git ignores:
+//   DEVELOPMENT_TEAM = ABCDE12345
+//   DL_BUNDLE_ID = dev.yourname.dailylogger
+DL_BUNDLE_ID = dev.kapil.dailylogger
+#include? "Local.xcconfig"

@@ -1,0 +1,40 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  core-tests:
+    # The rules (timeline, titles, reconcile) have no iOS code, so they run on Linux.
+    runs-on: ubuntu-latest
+    container: swift:5.10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test LoggerCore
+        working-directory: LoggerCore
+        run: swift test 2>&1 | tee ../core.log
+      - name: Report failures
+        if: failure()
+        run: grep -E "error:|failed|XCTAssert" core.log | head -40 | while IFS= read -r l; do echo "::error::$l"; done
+
+  app:
+    runs-on: macos-15
+    needs: core-tests
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate project
+        run: |
+          brew install xcodegen
+          xcodegen
+      - name: Build for the simulator (no signing)
+        run: |
+          set -o pipefail
+          xcodebuild -project DailyLogger.xcodeproj -scheme DailyLogger \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO build 2>&1 | tee build.log | tail -20
+      - name: Report failures
+        if: failure()
+        run: grep -E "error:" build.log | sort -u | head -40 | while IFS= read -r l; do echo "::error::$l"; done
